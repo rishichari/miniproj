@@ -1,0 +1,438 @@
+#include<iostream>
+#include<string.h>
+#include<fstream>
+#include<stdlib.h>
+using namespace std;
+struct correct
+{
+int qnum;
+int qop;
+int opcrct;
+};
+int *rands()
+{
+    //cout<<"rand function entered";
+	int arr[20];
+	int n=0,j;
+	do
+	{
+		int x=rand()%10+1;
+		for(j=0;arr[j]!=x&&j<n;j++)
+		{}
+		if(j==n)
+		{
+		arr[j]=x;
+		cout<<"in rand func";
+		cout<<arr[j]<<"\t";
+		n++;
+		}
+	}while(n<5);
+	//cout<<"rand function exited";
+	return arr;
+}
+class options
+{
+    char op1[50],op2[50],op3[50],op4[50];
+	friend class question;
+	friend class Ofile;
+};
+int cnt=0;
+class question
+{
+
+    char q[200];
+    char h[200];
+    options op;
+    int crct;
+    friend class Ofile;
+    public:
+	int id;
+    void getdata()
+    {
+        cout<<"id is";
+
+        cin>>id;
+		cout<<"enter the question:\n";
+		gets(q);
+		gets(q);
+        cout<<"enter hint:\n";
+        gets(h);
+        cout<<"enter first option:";
+        gets(op.op1);
+        cout<<"enter second option:";
+        gets(op.op2);
+        cout<<"enter the third option:";
+        gets(op.op3);
+        cout<<"enter the fourth option:";
+        gets(op.op4);
+        cout<<"enter the correct option";
+        cin>>crct;
+    }
+/*void insert()
+{
+ofstream fout;
+fout.open("ques.txt",std::ios_base::app);
+fout<<q<<"\n";
+fout<<op.op1<<"\n";
+fout<<op.op2<<"\n";
+fout<<op.op3<<"\n";
+fout<<op.op4<<"\n";
+}*/
+int ans()
+{
+
+    return crct;
+}
+void read()
+{
+
+ofstream fin;
+cout<<"Q:";
+fin<<q;
+puts(q);
+cout<<"1.";
+fin<<op.op1;
+puts(op.op1);
+cout<<"2.";
+fin<<op.op2;
+puts(op.op2);cout<<"3.";
+fin<<op.op3;
+puts(op.op3);
+cout<<"4.";
+fin<<op.op4;
+puts(op.op4);
+}
+};
+class Ofile
+{
+    fstream f;
+    public:
+    Ofile(char *name, char *mode)
+    {
+        if(strcmp(mode,"in")==0)
+            f.open(name,ios::in);
+            if(strcmp(mode,"out")==0)
+                f.open(name,ios::out);
+            if(strcmp(mode,"app")==0)
+                f.open(name,ios::app);
+    }
+    //Ofile f("c.txt","out")
+    //f.write(q);
+    void write(question obj)
+    {
+        char *ch="\n";
+            f.write((char*)&obj.id,sizeof(obj.id));
+            f.write((char*)&obj.q,sizeof(obj.q));
+            f.write((char *)&obj.h,sizeof(obj.h));
+            f.write((char *)&obj.op.op1,sizeof(obj.op.op1));
+            f.write((char *)&obj.op.op2,sizeof(obj.op.op2));
+            f.write((char *)&obj.op.op3,sizeof(obj.op.op3));
+            f.write((char *)&obj.op.op4,sizeof(obj.op.op4));
+            f.write((char *)&obj.crct,sizeof(obj.crct));
+            f.write((char *)&ch,sizeof(ch));
+            f.close();
+    }
+    question read()
+    {
+        question obj;
+        char ch;
+            f.read((char*)&obj.id,sizeof(obj.id));
+            f.read((char*)&obj.q,sizeof(obj.q));
+            f.read((char *)&obj.h,sizeof(obj.h));
+            f.read((char *)&obj.op.op1,sizeof(obj.op.op1));
+            f.read((char *)&obj.op.op2,sizeof(obj.op.op2));
+            f.read((char *)&obj.op.op3,sizeof(obj.op.op3));
+            f.read((char *)&obj.op.op4,sizeof(obj.op.op4));
+            f.read((char *)&obj.crct,sizeof(obj.crct));
+            f.read((char *)&ch,sizeof(ch));
+        //f.close();
+        return obj;
+    }
+
+    void close()
+    {
+        f.close();
+    }
+    void seekg(int x,char *status)
+    {
+        if(strcmp(status,"cur")==0)
+            f.seekg(x,ios::cur);
+        if(strcmp(status,"beg")==0)
+            f.seekg(x,ios::beg);
+
+    }
+};
+int main()
+{	char id[10],p[10];
+	cout<<"1.admin \n 2.student \n";
+	int n;
+	cin>>n;
+	switch(n)
+		{	 case 1:
+				{
+				char str[10],str1[10],p[10],id[10];
+				cout<<"enter id"<<"\n";
+
+				cin>>id;
+
+
+				cout<<"enter password"<<"\n";
+                cin>>p;
+				fstream f,f1;
+				f.open("aid.txt",ios::in);
+				f1.open("apass.txt",ios::in);
+				while(!f.eof()&& !f1.eof())
+				{
+
+
+					f.getline(str,10);
+
+					f1.getline(str1,10);
+
+
+
+					if(strcmp(id,str)==0)
+						{
+
+
+							if(strcmp(p,str1)==0)
+							{
+								cout<<"successfully logged in\n";
+								x:
+								{
+									cout<<"1.enter new id for stdent\n"<<"2.enter question\n"<<"3.exit\n";
+
+                                    int k;
+									cin>>k;
+									switch(k)
+									{
+										case 1:{
+												ofstream ufin;
+												ufin.open("stu.txt",std::ios_base::app);
+												ofstream pfin;
+												pfin.open("stupass.txt",std::ios_base::app);
+												cout<<"enter id \n";
+												char aid[10],ap[10];
+												gets(aid);
+												gets(aid);
+
+
+												ufin<<aid;
+												cout<<"\n";
+												cout<<"enter pass \n";
+												gets(ap);
+
+												pfin<<ap;
+												cout<<"\n";
+
+												goto x;
+												break;
+										       }
+
+										case 2:{
+												cout<<"choose sub: \n 1.c\n 2.maths \n 3.eng\n";
+												int s;
+												cin>>s;
+
+
+												switch(s)
+												{
+													case 1:
+													    {
+
+													        Ofile fin("c.txt","app");
+													        question m;
+												m.getdata();
+												fin.write(m);
+
+
+													}
+															break;
+													case 2:
+													    { Ofile fin("math.txt","app");
+													    question m;
+												m.getdata();
+												fin.write(m);
+
+														}
+														break;
+													case 3:
+													   { Ofile fin("eng.txt","app");
+													   question m;
+												m.getdata();
+												fin.write(m);
+
+															}
+															break;
+													default:{cout<<"choose valid sub \n  ";}
+												}
+
+												goto x;
+												break;
+												}
+										case 3:
+                                            exit(1);
+										default:
+                                            cout<<"choose correct action";
+									}
+                                }
+                            }
+                                else
+                                cout<<"incorrect password";
+                        }
+                            else
+                                cout<<"invalid id";
+
+						}
+                        }
+					case 2:
+							{
+							char strs[10],strs1[10],sp[10],sid[10];
+							fstream sf;
+							fstream sf1;
+
+							cout<<"enter id"<<"\n";
+
+							cin>>sid;
+
+
+						cout<<"enter password"<<"\n";
+               			 cin>>sp;
+						sf.open("aid.txt",ios::in);
+
+						sf1.open("apass.txt",ios::in);
+						while(!sf.eof()&& !sf1.eof())
+						{
+							sf.getline(strs,10);
+							sf1.getline(strs1,10);
+                            if(strcmp(sid,strs)==0)
+                            {
+                                if(strcmp(sp,strs1)==0)
+                                    {
+                                        cout<<"successfully logged in\nselect the subject:\n1.c 2.maths 3.english \n";
+                                        int s;
+                                        cin>>s;
+                                        switch(s)
+                                        {
+                                        case 1:
+                                            {
+                                                Ofile f("c.txt","in");
+                                            	int num=0;
+                                                struct correct c[5];
+                                                int *b=rands();
+                                                int y[5];
+                                                for(int i=0;i<5;i++)
+                                                    y[i]=*(b+i);
+                                                while(num!=5)
+                                                {
+                                                    question m;
+
+
+
+                                                    if(m.id==y[num])
+                                                    {
+                                                        //c[num].qnum=m.id;
+                                                        question m=f.read();
+                                                        m.read();
+                                                        int r;
+                                                        cout<<"enter the option:";
+                                                        cin>>r;
+                                                        c[num].qop=r;
+
+
+                                                        num++;
+                                                    }
+                                                    else
+                                                    {
+                                                        f.seekg(0,"cur");
+                                                    }
+                                                }
+
+
+                                            }
+                                            break;
+                                        case 2:
+                                            {Ofile f("math.txt","in");
+                                            int num=0;
+                                            struct correct c[5];
+
+                                            int *b=rands();
+
+
+                                            int y[5];
+                                            for(int i=0;i<5;i++)
+                                                {
+                                                    y[i]= *(b+i);
+                                                }
+
+                                               // f.seekg(0,"beg");
+                                               // question m=f.read();
+                                                //cout<<"read id is:"<<m.id;
+                                            for(int i=0;i<5;i++)
+                                                cout<<y[i]<<"\t";
+
+                                            while(num<5)
+                                            {
+                                                //cout<<"while entered";
+                                                question m=f.read();
+                                                f.seekg(0,"cur");
+                                                cout<<"y["<<num<<"]="<<y[num]<<"\tid is:"<<m.id<<"\n";
+                                                num++;
+                                                /*if(m.id==y[num])
+                                                {
+                                                    c[num].qnum=m.id;
+                                                    m.read();
+                                                    int r;
+                                                    cout<<"enter the option:";
+                                                    cin>>r;
+                                                    c[num].qop=r;
+
+                                                    c[num].opcrct=m.ans();
+                                                    if(c[num].qop==c[num].opcrct)
+                                                        {
+
+                                                        cout<<"correct ans";
+                                                        }
+                                                    else
+                                                    {
+                                                        cout<<"wrong ans";
+                                                    }
+
+                                                    num++;
+                                                }
+                                                else
+                                                {
+                                                    //cout<<"else entered\n";
+                                                    f.seekg(0,"cur");
+                                                }*/
+                                            }
+                                            }
+                                            break;
+                                        case 3:
+                                            {
+                                                Ofile f("eng.txt","in");
+                                                question m=f.read();
+                                                m.read();
+                                            }
+                                            break;
+                                        default:
+                                            cout<<"no proper option found.so exiting";
+                                            exit(1);
+                                        }
+
+                                    }
+                                    else
+                                        cout<<"invalid password";
+                            }
+							else
+                                cout<<"invalid id";
+						}
+                        break;
+					}
+					default:
+						cout<<"ïnvalid option";
+						exit(1);
+
+				}
+                return 0;
+	}
